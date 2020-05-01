@@ -1,0 +1,2 @@
+rootProject.name='Student Time Tracker'
+include ':app'
