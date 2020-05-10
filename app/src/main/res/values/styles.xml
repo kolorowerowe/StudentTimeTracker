@@ -1,11 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="StudentTimeTracker.LightTheme" parent="Theme.MaterialComponents.Light">
+    <style name="StudentTimeTracker.LightTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/white</item>
+
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="titleTextColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
 
         <item name="fontFamily">@font/roboto_medium</item>
     </style>
