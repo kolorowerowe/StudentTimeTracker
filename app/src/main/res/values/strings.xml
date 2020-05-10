@@ -5,4 +5,11 @@
     <string name="nav_trackTime">Track time</string>
     <string name="nav_statistics">Statistics</string>
     <string name="nav_profile">Profile</string>
+
+
+    <string name="navigation_drawer_open">OPEM</string>
+    <string name="navigation_drawer_close">CLOSE</string>
+
+
+
 </resources>

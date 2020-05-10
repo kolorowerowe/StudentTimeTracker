@@ -1,7 +1,10 @@
 package com.github.studenttimetracker;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import com.github.studenttimetracker.fragments.StatisticsFragment;
 import com.github.studenttimetracker.fragments.TimelineFragment;
 import com.github.studenttimetracker.fragments.TrackTimeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,12 +24,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        Toolbar toolbar = findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnNavigationItemSelectedListener(navListener);
+        bottomNav.setOnNavigationItemSelectedListener(bottomNavListener);
+
+        NavigationView leftNav = findViewById(R.id.left_navigation);
+        leftNav.setNavigationItemSelectedListener(leftNavListener);
 
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+    private NavigationView.OnNavigationItemSelectedListener leftNavListener =
+            new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    return false;
+                }
+            };
+
+    private BottomNavigationView.OnNavigationItemSelectedListener bottomNavListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
 
                 @Override
