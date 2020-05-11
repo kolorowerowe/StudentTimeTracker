@@ -7,9 +7,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.github.studenttimetracker.activities.InfoActivity;
+import com.github.studenttimetracker.activities.SettingsActivity;
 import com.github.studenttimetracker.fragments.ProfileFragment;
 import com.github.studenttimetracker.fragments.StatisticsFragment;
 import com.github.studenttimetracker.fragments.TimelineFragment;
@@ -44,6 +47,18 @@ public class MainActivity extends AppCompatActivity {
             new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Intent intent;
+                    switch (item.getItemId()) {
+                        case R.id.nav_settings:
+                            intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                            startActivity(intent);
+                            break;
+                        case R.id.nav_info:
+                            intent = new Intent(getApplicationContext(), InfoActivity.class);
+                            startActivity(intent);
+                        default:
+                            return false;
+                    }
                     return false;
                 }
             };
@@ -53,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFragment = null;
+                    Fragment selectedFragment;
 
                     switch (item.getItemId()) {
                         case R.id.nav_timeline:
@@ -72,11 +87,15 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new TimelineFragment();
                             break;
                     }
+                    loadFragment(selectedFragment);
 
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
-                            selectedFragment).commit();
 
                     return true;
                 }
             };
+
+    private void loadFragment(Fragment selectedFragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
+                selectedFragment).commit();
+    }
 }
