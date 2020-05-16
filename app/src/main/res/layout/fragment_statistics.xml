@@ -9,7 +9,6 @@
         android:id="@+id/statistics_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -32,6 +31,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/statistics_tab_year" />
-
     </com.google.android.material.tabs.TabLayout>
+
+    <LinearLayout
+        android:id="@+id/date_picker_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statistics_tabs"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/date_picker_previous"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_arrow_back_ios" />
+
+        <TextView
+            android:id="@+id/date_picker_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TODAY"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"/>
+
+        <Button
+            android:id="@+id/date_picker_next"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_arrow_forward_ios" />
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
