@@ -1,6 +1,6 @@
 package com.github.studenttimetracker.enums;
 
-public enum StatisticsUnitType {
+public enum StatisticsPeriodType {
 
     DAY("Day"),
     WEEK("Week"),
@@ -9,7 +9,7 @@ public enum StatisticsUnitType {
 
     private String value;
 
-    StatisticsUnitType(String value) {
+    StatisticsPeriodType(String value) {
         this.value = value;
     }
 

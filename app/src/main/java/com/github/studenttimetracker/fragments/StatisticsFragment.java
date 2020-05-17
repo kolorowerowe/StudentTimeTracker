@@ -12,31 +12,39 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.github.studenttimetracker.R;
-import com.github.studenttimetracker.enums.StatisticsUnitType;
+import com.github.studenttimetracker.enums.StatisticsPeriodType;
 import com.github.studenttimetracker.model.StatisticsQueryObject;
 import com.github.studenttimetracker.utils.CalendarUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 
-import java.util.ArrayList;
-import java.util.Date;
+import org.joda.time.LocalDate;
+
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public class StatisticsFragment extends Fragment {
 
-    private StatisticsUnitType unitType = StatisticsUnitType.DAY;
-    private Map<StatisticsUnitType, Integer> currentIndexes = new EnumMap<>(StatisticsUnitType.class);
+    private StatisticsPeriodType unitType = StatisticsPeriodType.DAY;
+    private Map<StatisticsPeriodType, Integer> currentIndexes = new EnumMap<>(StatisticsPeriodType.class);
 
     private TextView textView;
     private Button previousButton;
     private Button nextButton;
 
+    private LocalDate firstDate;
+    List<StatisticsQueryObject> statisticsQueryObject;
+
     public StatisticsFragment() {
-        currentIndexes.put(StatisticsUnitType.DAY, 0);
-        currentIndexes.put(StatisticsUnitType.WEEK, 0);
-        currentIndexes.put(StatisticsUnitType.MONTH, 0);
-        currentIndexes.put(StatisticsUnitType.YEAR, 0);
+        currentIndexes.put(StatisticsPeriodType.DAY, 0);
+        currentIndexes.put(StatisticsPeriodType.WEEK, 0);
+        currentIndexes.put(StatisticsPeriodType.MONTH, 0);
+        currentIndexes.put(StatisticsPeriodType.YEAR, 0);
+
+        firstDate = LocalDate.now().minusMonths(5);
+        statisticsQueryObject = CalendarUtils.getStatisticsQueryList(unitType, firstDate, LocalDate.now());
+
     }
 
     @Override
@@ -67,7 +75,6 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void refreshDatePicker() {
-        ArrayList<StatisticsQueryObject> statisticsQueryObject = CalendarUtils.getStatisticsObjectType(unitType, new Date());
         textView.setText(statisticsQueryObject.get(currentIndexes.get(unitType)).getName());
         previousButton.setEnabled(statisticsQueryObject.get(currentIndexes.get(unitType)).isHasPrevious());
         nextButton.setEnabled(statisticsQueryObject.get(currentIndexes.get(unitType)).isHasNext());
@@ -79,18 +86,19 @@ public class StatisticsFragment extends Fragment {
             switch (tab.getPosition()) {
                 case 0:
                 default:
-                    unitType = StatisticsUnitType.DAY;
+                    unitType = StatisticsPeriodType.DAY;
                     break;
                 case 1:
-                    unitType = StatisticsUnitType.WEEK;
+                    unitType = StatisticsPeriodType.WEEK;
                     break;
                 case 2:
-                    unitType = StatisticsUnitType.MONTH;
+                    unitType = StatisticsPeriodType.MONTH;
                     break;
                 case 3:
-                    unitType = StatisticsUnitType.YEAR;
+                    unitType = StatisticsPeriodType.YEAR;
                     break;
             }
+            statisticsQueryObject = CalendarUtils.getStatisticsQueryList(unitType, firstDate, LocalDate.now());
             refreshDatePicker();
         }
 
