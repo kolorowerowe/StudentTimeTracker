@@ -11,8 +11,8 @@ import lombok.Data;
 public class StatisticsQueryObject {
 
     private String name;
-    private boolean hasNext = true;
-    private boolean hasPrevious = true;
+    private boolean hasNext;
+    private boolean hasPrevious;
     private Date dateFrom;
     private Date dateTo;
 
