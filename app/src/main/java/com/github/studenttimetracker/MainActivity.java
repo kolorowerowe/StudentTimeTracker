@@ -9,18 +9,28 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.github.studenttimetracker.activities.InfoActivity;
 import com.github.studenttimetracker.activities.SettingsActivity;
+import com.github.studenttimetracker.database.DatabaseHelper;
 import com.github.studenttimetracker.fragments.ProfileFragment;
 import com.github.studenttimetracker.fragments.StatisticsFragment;
 import com.github.studenttimetracker.fragments.TimelineFragment;
 import com.github.studenttimetracker.fragments.TrackTimeFragment;
+import com.github.studenttimetracker.models.Project;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private DatabaseHelper databaseHelper= null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
