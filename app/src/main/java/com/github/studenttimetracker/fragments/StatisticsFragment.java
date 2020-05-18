@@ -1,29 +1,38 @@
 package com.github.studenttimetracker.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
-import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.chart.common.listener.Event;
 import com.anychart.chart.common.listener.ListenersInterface;
 import com.anychart.charts.Pie;
 import com.github.studenttimetracker.R;
+import com.github.studenttimetracker.adapters.StatisticsCard;
+import com.github.studenttimetracker.adapters.StatisticsListAdapter;
 import com.github.studenttimetracker.enums.StatisticsPeriodType;
+import com.github.studenttimetracker.model.StatisticsDataEntry;
 import com.github.studenttimetracker.model.StatisticsQueryObject;
 import com.github.studenttimetracker.utils.CalendarUtils;
+import com.github.studenttimetracker.utils.MockChartData;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 
@@ -44,10 +53,13 @@ public class StatisticsFragment extends Fragment {
     private Button nextButton;
 
     private LocalDate firstDate;
-    List<StatisticsQueryObject> statisticsQueryObject;
+    private List<StatisticsQueryObject> statisticsQueryObject;
 
-    private AnyChartView statisticsPieChartView;
     private Pie statisticsPieChart;
+    private MockChartData mockChartData;
+    private ListView statisticsListView;
+    private StatisticsListAdapter statisticsListAdapter;
+    private NestedScrollView statisticsCardView;
 
     public StatisticsFragment() {
         currentIndexes.put(StatisticsPeriodType.DAY, 0);
@@ -58,6 +70,7 @@ public class StatisticsFragment extends Fragment {
         firstDate = LocalDate.now().minusMonths(5);
         statisticsQueryObject = CalendarUtils.getStatisticsQueryList(unitType, firstDate, LocalDate.now());
 
+        mockChartData = new MockChartData();
     }
 
     @Override
@@ -84,35 +97,48 @@ public class StatisticsFragment extends Fragment {
         nextButton = view.findViewById(R.id.date_picker_next);
         nextButton.setOnClickListener(onNextButtonListener);
 
-        refreshDatePicker();
-
-
         //   PIE CHART
-        statisticsPieChartView = view.findViewById(R.id.statistics_chart);
+        AnyChartView statisticsPieChartView = view.findViewById(R.id.statistics_chart);
         statisticsPieChart = AnyChart.pie();
         statisticsPieChart.setOnClickListener(pieChartListener);
         statisticsPieChart.labels().position("outside");
+        statisticsPieChart.legend(false);
         statisticsPieChartView.setChart(statisticsPieChart);
 
-        List<DataEntry> exampleData = new ArrayList<>();
-        exampleData.add(new ValueDataEntry("Running", 13));
-        exampleData.add(new ValueDataEntry("Sleeping", 400));
-        exampleData.add(new ValueDataEntry("Cooking", 75));
-
-        setPieData(exampleData);
-
+        // LIST OF ACTIVITIES
+        statisticsListView = view.findViewById(R.id.list_statistics);
+        statisticsListAdapter = new StatisticsListAdapter(getContext(), R.layout.statistics_list_element);
+        statisticsListView.setAdapter(statisticsListAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        refreshDatePicker();
     }
 
     private void refreshDatePicker() {
         textView.setText(statisticsQueryObject.get(currentIndexes.get(unitType)).getName());
         previousButton.setEnabled(statisticsQueryObject.get(currentIndexes.get(unitType)).isHasPrevious());
         nextButton.setEnabled(statisticsQueryObject.get(currentIndexes.get(unitType)).isHasNext());
+        refreshPieData();
     }
 
-    private void setPieData(List<DataEntry> data) {
-        statisticsPieChart.data(data);
+    private void refreshPieData() {
+        List<StatisticsDataEntry> statisticsDataEntries = mockChartData.getExampleData();
+
+
+        List<DataEntry> dataEntries = new ArrayList<>();
+        for (StatisticsDataEntry entry : statisticsDataEntries) {
+            dataEntries.add(entry.valueDataEntry());
+        }
+        statisticsPieChart.data(dataEntries);
+
+        statisticsListAdapter.clear();
+        for (int i = 0; i < statisticsDataEntries.size(); i++) {
+            statisticsListAdapter.add(new StatisticsCard(statisticsDataEntries.get(i).getName(), statisticsDataEntries.get(i).getHoursSpent() + "h "));
+        }
 
     }
 
