@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/activityName"
+        android:id="@+id/activityNameInput"
         android:layout_width="213dp"
         android:layout_height="0dp"
         android:layout_marginStart="32dp"
@@ -24,49 +24,49 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="Process"
-        app:layout_constraintBaseline_toBaselineOf="@+id/activityName"
+        app:layout_constraintBaseline_toBaselineOf="@+id/activityNameInput"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
-        app:layout_constraintStart_toEndOf="@+id/activityName" />
+        app:layout_constraintHorizontal_bias="0.438"
+        app:layout_constraintStart_toEndOf="@+id/activityNameInput" />
 
     <TextView
         android:id="@+id/activityNameShow"
         android:layout_width="183dp"
         android:layout_height="21dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="312dp"
         android:text="Activity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityName" />
+        app:layout_constraintTop_toBottomOf="@+id/activityNameInput" />
 
     <TextView
-        android:id="@+id/startTime"
-        android:layout_width="48dp"
-        android:layout_height="15dp"
-        android:layout_marginStart="28dp"
+        android:id="@+id/spentTime"
+        android:layout_width="77dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="20dp"
         android:text="Start"
         app:layout_constraintBaseline_toBaselineOf="@+id/activityNameShow"
-        app:layout_constraintStart_toEndOf="@+id/activityNameShow" />
-
-    <TextView
-        android:id="@+id/endTime"
-        android:layout_width="49dp"
-        android:layout_height="19dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="End"
-        app:layout_constraintBaseline_toBaselineOf="@+id/startTime"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/startTime" />
+        app:layout_constraintStart_toEndOf="@+id/activityNameShow" />
 
     <Button
         android:id="@+id/endActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
         android:text="Stop"
+        app:layout_constraintBaseline_toBaselineOf="@+id/activityNameInput"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.532"
+        app:layout_constraintHorizontal_bias="0.851"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Chronometer
+        android:id="@+id/myChronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.275"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
