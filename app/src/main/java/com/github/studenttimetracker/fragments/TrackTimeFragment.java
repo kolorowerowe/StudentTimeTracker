@@ -22,6 +22,8 @@ import com.github.studenttimetracker.services.ChronometerService;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+import static com.github.studenttimetracker.services.ChronometerService.ACTIVITY_NAME;
+
 public class TrackTimeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class TrackTimeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tracktime, container, false);
+        final View view = inflater.inflate(R.layout.fragment_tracktime, container, false);
 
         final Button startButton = view.findViewById(R.id.startActivity);
         final Button endButton = view.findViewById(R.id.endActivity);
@@ -52,18 +54,38 @@ public class TrackTimeFragment extends Fragment {
                 },new IntentFilter(ChronometerService.ACTION_CHRONOMETER_BROADCAST)
         );
 
-        endButton.setVisibility(View.INVISIBLE);
-        chronometer.setVisibility(View.INVISIBLE);
-        activityNameShow.setVisibility(View.INVISIBLE);
-        spentTime.setVisibility(View.INVISIBLE);
+        // Setting up UI
+        if(ChronometerService.active)
+        {
+            endButton.setVisibility(View.VISIBLE);
+            chronometer.setVisibility(View.VISIBLE);
+            activityNameShow.setVisibility(View.VISIBLE);
+            spentTime.setVisibility(View.VISIBLE);
+
+            startButton.setVisibility(View.INVISIBLE);
+            activityNameInput.setVisibility(View.INVISIBLE);
+        }
+        else {
+            endButton.setVisibility(View.INVISIBLE);
+            chronometer.setVisibility(View.INVISIBLE);
+            activityNameShow.setVisibility(View.INVISIBLE);
+            spentTime.setVisibility(View.INVISIBLE);
+
+            startButton.setVisibility(View.VISIBLE);
+            activityNameInput.setVisibility(View.VISIBLE);
+        }
 
         // Setting onClicks()
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                getActivity().startService(new Intent(getActivity(), ChronometerService.class));
-                activityNameShow.setText(activityNameInput.getText());
+                String activityName = String.valueOf(activityNameInput.getText());
+                activityNameShow.setText(activityName);
+
+                Intent serviceIntent = new Intent(getActivity(),ChronometerService.class);
+                serviceIntent.putExtra(ACTIVITY_NAME,activityName);
+                getActivity().startService(serviceIntent);
 
                 endButton.setVisibility(View.VISIBLE);
                 chronometer.setVisibility(View.VISIBLE);
@@ -75,7 +97,9 @@ public class TrackTimeFragment extends Fragment {
         endButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().stopService(new Intent(getActivity(),ChronometerService.class));
+
+                Intent serviceIntent = new Intent(getActivity(),ChronometerService.class);
+                getActivity().stopService(serviceIntent);
 
                 spentTime.setText(chronometer.getText());
 
@@ -91,5 +115,4 @@ public class TrackTimeFragment extends Fragment {
         // End of onClicks()
         return view;
     }
-
 }
