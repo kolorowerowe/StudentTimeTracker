@@ -5,17 +5,24 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 @DatabaseTable(tableName = "projects")
 public class Project {
     @DatabaseField(columnName = "id",generatedId = true)
-    int id;
+    private int id;
 
     @DatabaseField(columnName = "project_name")
-    String projectName;
+    private String projectName;
 
-//    @ForeignCollectionField(eager = true)
-//    java.util.Collection<Task> tasks;
+    @ForeignCollectionField(eager = true)
+    private java.util.Collection<Task> tasks;
+
+    @DatabaseField(columnName = "color")
+    private String color;
+
+    @DatabaseField(columnName = "icon")
+    private String icon;
 
     public int getId() {
         return id;
@@ -33,22 +40,13 @@ public class Project {
         this.projectName = projectName;
     }
 
-//    public Collection<Task> getTasks() {
-//        return tasks;
-//    }
-//
-//    public void setTasks(Collection<Task> tasks) {
-//        this.tasks = tasks;
-//    }
+    public Collection<Task> getTasks() {
+        if(tasks == null)
+            tasks = new LinkedList<Task>();
+        return tasks;
+    }
 
-//    public void saveToDb(DatabaseHelper dbHelper) throws java.sql.SQLException{
-//        Dao<User, Long> dao = dbHelper.getUserDao();
-//        dao.createOrUpdate(this);
-//    }
-//
-//    public static User loadFromDb(DatabaseHelper dbHelper, Long id) throws SQLException {
-//        Dao<User, Long> dao = dbHelper.getUserDao();
-//        User user = dao.queryForId(id);
-//        return user;
-//    }
+    public void setTasks(Collection<Task> tasks) {
+        this.tasks = tasks;
+    }
 }
