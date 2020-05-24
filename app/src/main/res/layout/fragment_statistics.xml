@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/statistics_tabs"
+        android:id="@+id/statistics_period_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -33,7 +33,7 @@
     </com.google.android.material.tabs.TabLayout>
 
     <LinearLayout
-        android:id="@+id/date_picker_card"
+        android:id="@+id/statistics_date_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center">
@@ -71,7 +71,7 @@
         android:layout_margin="10dp"/>
 
     <ListView
-        android:id="@+id/list_statistics"
+        android:id="@+id/statistics_list"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"/>
