@@ -21,7 +21,7 @@ import java.util.List;
 
 public class InfoActivity extends AppCompatActivity {
 
-    private Repository repository = null;
+    private Repository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
