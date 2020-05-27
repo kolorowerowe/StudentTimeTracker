@@ -15,16 +15,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.studenttimetracker.R;
+import com.github.studenttimetracker.recycleView.TimeEntry;
+import com.github.studenttimetracker.recycleView.TimeEntryAdapter;
 import com.github.studenttimetracker.services.ChronometerService;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import static com.github.studenttimetracker.services.ChronometerService.ACTIVITY_NAME;
 
 public class TrackTimeFragment extends Fragment {
+
+    private List<TimeEntry> timeEntryList = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +42,13 @@ public class TrackTimeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_tracktime, container, false);
+        View view = inflater.inflate(R.layout.fragment_tracktime, container, false);
+
+        // Setting the timeEntryRecycleView
+        RecyclerView recyclerView = view.findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new TimeEntryAdapter(initTimeEntryRecycleView()));
 
         final Button startButton = view.findViewById(R.id.startActivity);
         final Button endButton = view.findViewById(R.id.endActivity);
@@ -114,5 +129,24 @@ public class TrackTimeFragment extends Fragment {
         });
         // End of onClicks()
         return view;
+    }
+
+    // Init with data form DataBase
+    private List<TimeEntry> initTimeEntryRecycleView(){
+        timeEntryList.add(new TimeEntry("1:00", "Breakfast"));
+        timeEntryList.add(new TimeEntry("0:30", "Studying"));
+        timeEntryList.add(new TimeEntry("2:00", "Leisure"));
+        timeEntryList.add(new TimeEntry("1:00", "Sport"));
+        timeEntryList.add(new TimeEntry("1:30", "Gaming"));
+        timeEntryList.add(new TimeEntry("3:00", "Studying"));
+        timeEntryList.add(new TimeEntry("1:00", "Breakfast"));
+        timeEntryList.add(new TimeEntry("0:30", "Studying"));
+        timeEntryList.add(new TimeEntry("2:00", "Leisure"));
+        timeEntryList.add(new TimeEntry("1:00", "Sport"));
+        timeEntryList.add(new TimeEntry("1:30", "Gaming"));
+        timeEntryList.add(new TimeEntry("3:00", "Studying"));
+
+
+        return timeEntryList;
     }
 }
