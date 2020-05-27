@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,22 +43,23 @@ public class TrackTimeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tracktime, container, false);
 
         // Setting the timeEntryRecycleView
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new TimeEntryAdapter(initTimeEntryRecycleView()));
+        final TimeEntryAdapter timeEntryAdapter = new TimeEntryAdapter(initTimeEntryRecycleView());
+        recyclerView.setAdapter(timeEntryAdapter);
 
         final Button startButton = view.findViewById(R.id.startActivity);
         final Button endButton = view.findViewById(R.id.endActivity);
         final TextView activityNameInput = view.findViewById(R.id.activityNameInput);
         final TextView activityNameShow = view.findViewById(R.id.activityNameShow);
         final TextView chronometer = view.findViewById(R.id.myChronometer);
-        final TextView spentTime = view.findViewById(R.id.spentTime);
 
+        startButton.setEnabled(false);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                 new BroadcastReceiver() {
                     @Override
@@ -75,7 +78,6 @@ public class TrackTimeFragment extends Fragment {
             endButton.setVisibility(View.VISIBLE);
             chronometer.setVisibility(View.VISIBLE);
             activityNameShow.setVisibility(View.VISIBLE);
-            spentTime.setVisibility(View.VISIBLE);
 
             startButton.setVisibility(View.INVISIBLE);
             activityNameInput.setVisibility(View.INVISIBLE);
@@ -84,7 +86,6 @@ public class TrackTimeFragment extends Fragment {
             endButton.setVisibility(View.INVISIBLE);
             chronometer.setVisibility(View.INVISIBLE);
             activityNameShow.setVisibility(View.INVISIBLE);
-            spentTime.setVisibility(View.INVISIBLE);
 
             startButton.setVisibility(View.VISIBLE);
             activityNameInput.setVisibility(View.VISIBLE);
@@ -104,6 +105,7 @@ public class TrackTimeFragment extends Fragment {
 
                 endButton.setVisibility(View.VISIBLE);
                 chronometer.setVisibility(View.VISIBLE);
+                activityNameShow.setVisibility(View.VISIBLE);
                 activityNameInput.setVisibility(View.INVISIBLE);
                 startButton.setVisibility(View.INVISIBLE);
             }
@@ -116,11 +118,14 @@ public class TrackTimeFragment extends Fragment {
                 Intent serviceIntent = new Intent(getActivity(),ChronometerService.class);
                 getActivity().stopService(serviceIntent);
 
-                spentTime.setText(chronometer.getText());
+                String duration = (String) chronometer.getText();
+                String activity = (String) activityNameShow.getText();
+                TimeEntry timeEntry = new TimeEntry(duration,activity);
+                timeEntryList.add(timeEntry);
+                timeEntryAdapter.notifyDataSetChanged();
 
-                spentTime.setVisibility(View.VISIBLE);
-                activityNameShow.setVisibility(View.VISIBLE);
                 activityNameInput.setVisibility(View.VISIBLE);
+                activityNameShow.setVisibility(View.INVISIBLE);
                 startButton.setVisibility(View.VISIBLE);
                 endButton.setVisibility(View.INVISIBLE);
                 chronometer.setVisibility(View.INVISIBLE);
@@ -128,24 +133,38 @@ public class TrackTimeFragment extends Fragment {
             }
         });
         // End of onClicks()
+
+        // Text Watcher
+        activityNameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String input = activityNameInput.getText().toString().trim();
+                startButton.setEnabled(!input.isEmpty());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
         return view;
     }
 
     // Init with data form DataBase
     private List<TimeEntry> initTimeEntryRecycleView(){
-        timeEntryList.add(new TimeEntry("1:00", "Breakfast"));
-        timeEntryList.add(new TimeEntry("0:30", "Studying"));
-        timeEntryList.add(new TimeEntry("2:00", "Leisure"));
-        timeEntryList.add(new TimeEntry("1:00", "Sport"));
-        timeEntryList.add(new TimeEntry("1:30", "Gaming"));
-        timeEntryList.add(new TimeEntry("3:00", "Studying"));
-        timeEntryList.add(new TimeEntry("1:00", "Breakfast"));
-        timeEntryList.add(new TimeEntry("0:30", "Studying"));
-        timeEntryList.add(new TimeEntry("2:00", "Leisure"));
-        timeEntryList.add(new TimeEntry("1:00", "Sport"));
-        timeEntryList.add(new TimeEntry("1:30", "Gaming"));
-        timeEntryList.add(new TimeEntry("3:00", "Studying"));
-
+        timeEntryList.add(new TimeEntry("01:00:00", "Breakfast"));
+        timeEntryList.add(new TimeEntry("00:30:00", "Studying"));
+        timeEntryList.add(new TimeEntry("02:00:00", "Leisure"));
+        timeEntryList.add(new TimeEntry("01:00:00", "Sport"));
+        timeEntryList.add(new TimeEntry("01:30:00", "Gaming"));
+        timeEntryList.add(new TimeEntry("03:00:00", "Studying"));
+        timeEntryList.add(new TimeEntry("01:00:00", "Breakfast"));
+        timeEntryList.add(new TimeEntry("00:30:00", "Studying"));
+        timeEntryList.add(new TimeEntry("02:00:00", "Leisure"));
+        timeEntryList.add(new TimeEntry("01:00:00", "Sport"));
+        timeEntryList.add(new TimeEntry("01:30:00", "Gaming"));
+        timeEntryList.add(new TimeEntry("03:00:00", "Studying"));
 
         return timeEntryList;
     }
