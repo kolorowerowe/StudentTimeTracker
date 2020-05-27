@@ -1,20 +1,16 @@
 package com.github.studenttimetracker.fragments;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
@@ -84,7 +80,7 @@ public class StatisticsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
         //     DAY | WEEK | MONTH | YEAR
-        final TabLayout tabs = view.findViewById(R.id.statistics_tabs);
+        final TabLayout tabs = view.findViewById(R.id.statistics_period_tabs);
         tabs.addOnTabSelectedListener(onTabSelectedListener);
 
 
@@ -106,7 +102,7 @@ public class StatisticsFragment extends Fragment {
         statisticsPieChartView.setChart(statisticsPieChart);
 
         // LIST OF ACTIVITIES
-        statisticsListView = view.findViewById(R.id.list_statistics);
+        statisticsListView = view.findViewById(R.id.statistics_list);
         statisticsListAdapter = new StatisticsListAdapter(getContext(), R.layout.statistics_list_element);
         statisticsListView.setAdapter(statisticsListAdapter);
 
