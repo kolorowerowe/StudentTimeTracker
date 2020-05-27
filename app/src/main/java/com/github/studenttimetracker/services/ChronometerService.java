@@ -25,6 +25,7 @@ public class ChronometerService extends Service {
     public static boolean active = false;
     Timer timer = new Timer();
     long startTime = 0;
+    String activityName;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -34,7 +35,7 @@ public class ChronometerService extends Service {
         timer.scheduleAtFixedRate( new sendBroadcastMessageClass(), 0, 1000);
 
         // Notification
-        String activityName = intent.getStringExtra(ACTIVITY_NAME);
+        activityName = intent.getStringExtra(ACTIVITY_NAME);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0,notificationIntent,0);
@@ -62,6 +63,7 @@ public class ChronometerService extends Service {
         // Sending Data back to Fragment
         Intent intent = new Intent(ACTION_CHRONOMETER_BROADCAST);
         intent.putExtra(ELAPSED_TIME, elapsedTime);
+        intent.putExtra(ACTIVITY_NAME,activityName);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

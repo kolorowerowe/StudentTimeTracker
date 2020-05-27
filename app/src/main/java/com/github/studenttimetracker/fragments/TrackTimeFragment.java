@@ -65,9 +65,11 @@ public class TrackTimeFragment extends Fragment {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         long elapsedTime = intent.getLongExtra(ChronometerService.ELAPSED_TIME,0);
+                        String activityName = intent.getStringExtra(ACTIVITY_NAME);
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
                         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
                         chronometer.setText(simpleDateFormat.format(elapsedTime));
+                        activityNameShow.setText(String.valueOf(activityName));
                     }
                 },new IntentFilter(ChronometerService.ACTION_CHRONOMETER_BROADCAST)
         );
@@ -125,8 +127,8 @@ public class TrackTimeFragment extends Fragment {
                 timeEntryAdapter.notifyDataSetChanged();
 
                 activityNameInput.setVisibility(View.VISIBLE);
-                activityNameShow.setVisibility(View.INVISIBLE);
                 startButton.setVisibility(View.VISIBLE);
+                activityNameShow.setVisibility(View.INVISIBLE);
                 endButton.setVisibility(View.INVISIBLE);
                 chronometer.setVisibility(View.INVISIBLE);
 
