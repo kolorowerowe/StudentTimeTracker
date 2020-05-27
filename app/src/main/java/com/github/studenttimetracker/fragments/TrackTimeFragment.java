@@ -10,7 +10,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +30,7 @@ import com.github.studenttimetracker.services.ChronometerService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -35,6 +39,8 @@ import static com.github.studenttimetracker.services.ChronometerService.ACTIVITY
 public class TrackTimeFragment extends Fragment {
 
     private List<TimeEntry> timeEntryList = new ArrayList<>();
+    private static String NULL_ACTIVITY = "---";
+    private List<String> spinnerArrayList = Arrays.asList(NULL_ACTIVITY,"Breakfast", "Studying", "Leisure", "Sport", "Gaming");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,20 +52,15 @@ public class TrackTimeFragment extends Fragment {
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tracktime, container, false);
 
-        // Setting the timeEntryRecycleView
-        RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        final TimeEntryAdapter timeEntryAdapter = new TimeEntryAdapter(initTimeEntryRecycleView());
-        recyclerView.setAdapter(timeEntryAdapter);
-
+        // Getting variables
         final Button startButton = view.findViewById(R.id.startActivity);
         final Button endButton = view.findViewById(R.id.endActivity);
         final TextView activityNameInput = view.findViewById(R.id.activityNameInput);
         final TextView activityNameShow = view.findViewById(R.id.activityNameShow);
         final TextView chronometer = view.findViewById(R.id.myChronometer);
+        final Spinner spinner = view.findViewById(R.id.activitySpinner);
 
-        startButton.setEnabled(false);
+        // BroadCast Receiver
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                 new BroadcastReceiver() {
                     @Override
@@ -74,6 +75,18 @@ public class TrackTimeFragment extends Fragment {
                 },new IntentFilter(ChronometerService.ACTION_CHRONOMETER_BROADCAST)
         );
 
+        // Setting the timeEntryRecycleView
+        RecyclerView recyclerView = view.findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        final TimeEntryAdapter timeEntryAdapter = new TimeEntryAdapter(initTimeEntryRecycleView());
+        recyclerView.setAdapter(timeEntryAdapter);
+
+        // Spinner Items
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,spinnerArrayList);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+
         // Setting up UI
         if(ChronometerService.active)
         {
@@ -83,6 +96,7 @@ public class TrackTimeFragment extends Fragment {
 
             startButton.setVisibility(View.INVISIBLE);
             activityNameInput.setVisibility(View.INVISIBLE);
+            spinner.setVisibility(View.INVISIBLE);
         }
         else {
             endButton.setVisibility(View.INVISIBLE);
@@ -91,6 +105,7 @@ public class TrackTimeFragment extends Fragment {
 
             startButton.setVisibility(View.VISIBLE);
             activityNameInput.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.VISIBLE);
         }
 
         // Setting onClicks()
@@ -98,7 +113,7 @@ public class TrackTimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String activityName = String.valueOf(activityNameInput.getText());
+                String activityName = getActivityName(activityNameInput,spinner);
                 activityNameShow.setText(activityName);
 
                 Intent serviceIntent = new Intent(getActivity(),ChronometerService.class);
@@ -109,6 +124,7 @@ public class TrackTimeFragment extends Fragment {
                 chronometer.setVisibility(View.VISIBLE);
                 activityNameShow.setVisibility(View.VISIBLE);
                 activityNameInput.setVisibility(View.INVISIBLE);
+                spinner.setVisibility(View.INVISIBLE);
                 startButton.setVisibility(View.INVISIBLE);
             }
         });
@@ -128,6 +144,7 @@ public class TrackTimeFragment extends Fragment {
 
                 activityNameInput.setVisibility(View.VISIBLE);
                 startButton.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.VISIBLE);
                 activityNameShow.setVisibility(View.INVISIBLE);
                 endButton.setVisibility(View.INVISIBLE);
                 chronometer.setVisibility(View.INVISIBLE);
@@ -136,20 +153,32 @@ public class TrackTimeFragment extends Fragment {
         });
         // End of onClicks()
 
-        // Text Watcher
+        // Change Watchers
+        startButton.setEnabled(false);
+
         activityNameInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String input = activityNameInput.getText().toString().trim();
-                startButton.setEnabled(!input.isEmpty());
+                handleInputSpinnerChange(activityNameInput,spinner,startButton);
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
         });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleInputSpinnerChange(activityNameInput,spinner,startButton);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
         return view;
     }
 
@@ -169,5 +198,20 @@ public class TrackTimeFragment extends Fragment {
         timeEntryList.add(new TimeEntry("03:00:00", "Studying"));
 
         return timeEntryList;
+    }
+
+    private String getActivityName(TextView activityNameInput, Spinner spinner){
+        String textInput = activityNameInput.getText().toString().trim();
+        String spinnerInput = spinner.getSelectedItem().toString();
+
+        if(!textInput.equals("")) return textInput;
+        else return spinnerInput;
+    }
+
+    private void handleInputSpinnerChange(TextView activityNameInput, Spinner spinner, Button startButton){
+        String textInput = activityNameInput.getText().toString().trim();
+        String spinnerInput = spinner.getSelectedItem().toString();
+
+        startButton.setEnabled(!textInput.isEmpty() || !spinnerInput.equals(NULL_ACTIVITY));
     }
 }

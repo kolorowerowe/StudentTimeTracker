@@ -78,4 +78,14 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+    <Spinner
+        android:id="@+id/activitySpinner"
+        android:layout_width="139dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.882"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endActivity" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
