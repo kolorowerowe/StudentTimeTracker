@@ -1,16 +1,16 @@
 package com.github.studenttimetracker;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 
 import com.github.studenttimetracker.activities.InfoActivity;
 import com.github.studenttimetracker.activities.SettingsActivity;
@@ -19,18 +19,12 @@ import com.github.studenttimetracker.fragments.ProfileFragment;
 import com.github.studenttimetracker.fragments.StatisticsFragment;
 import com.github.studenttimetracker.fragments.TimelineFragment;
 import com.github.studenttimetracker.fragments.TrackTimeFragment;
-import com.github.studenttimetracker.models.Project;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
-
-import java.sql.SQLException;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DatabaseHelper databaseHelper= null;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +55,21 @@ public class MainActivity extends AppCompatActivity {
                     switch (item.getItemId()) {
                         case R.id.nav_settings:
                             intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                            startActivity(intent);
                             break;
                         case R.id.nav_info:
                             intent = new Intent(getApplicationContext(), InfoActivity.class);
-                            startActivity(intent);
+                            break;
+                        case R.id.nav_contact:
+                            intent = new Intent(Intent.ACTION_SENDTO);
+                            String uriText = "mailto:dominos55555@gmail.com" +
+                                    "?subject=" + Uri.encode("Contact form - Student Time Tracker app") +
+                                    "&body=" + Uri.encode("Hi!\nI want to ...");
+                            intent.setData(Uri.parse(uriText));
+                            break;
                         default:
                             return false;
                     }
+                    startActivity(intent);
                     return false;
                 }
             };
