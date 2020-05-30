@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.studenttimetracker">
 
+
+
     <application
         android:name=".notifications.App"
         android:allowBackup="true"
