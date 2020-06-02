@@ -1,6 +1,7 @@
 package com.github.studenttimetracker;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -21,6 +22,11 @@ import com.github.studenttimetracker.fragments.TimelineFragment;
 import com.github.studenttimetracker.fragments.TrackTimeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +50,20 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationView leftNav = findViewById(R.id.left_navigation);
         leftNav.setNavigationItemSelectedListener(leftNavListener);
+
+        // Filling database with data
+        try {
+            SQLiteDatabase database = new DatabaseHelper(this).getWritableDatabase();
+            InputStream inputStream = getResources().getAssets().open("databaseSetup.sql");
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            while (bufferedReader.ready()){
+                // In case of error: check if databaseSetup.sql contains no-SQL lines. Like empty lines, comments (yes even sql comments!)
+                database.execSQL(bufferedReader.readLine());
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

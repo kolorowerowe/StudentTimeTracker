@@ -3,6 +3,7 @@ package com.github.studenttimetracker.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+
 import lombok.Data;
 
 @Data
