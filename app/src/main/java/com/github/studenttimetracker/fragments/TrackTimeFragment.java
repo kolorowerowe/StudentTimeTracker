@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -57,7 +58,7 @@ public class TrackTimeFragment extends Fragment {
         final Button endButton = view.findViewById(R.id.endActivity);
         final TextView activityNameInput = view.findViewById(R.id.activityNameInput);
         final TextView activityNameShow = view.findViewById(R.id.activityNameShow);
-        final TextView chronometer = view.findViewById(R.id.myChronometer);
+        final Chronometer chronometer = view.findViewById(R.id.myChronometer);
         final Spinner spinner = view.findViewById(R.id.activitySpinner);
 
         // BroadCast Receiver

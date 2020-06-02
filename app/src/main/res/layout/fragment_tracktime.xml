@@ -49,7 +49,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myChronometer" />
 
-    <TextView
+    <Chronometer
         android:id="@+id/myChronometer"
         android:layout_width="245dp"
         android:layout_height="47dp"
