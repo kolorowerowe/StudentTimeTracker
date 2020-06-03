@@ -5,42 +5,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/startActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:text="@string/start_activity"
-        app:layout_constraintBaseline_toBaselineOf="@+id/activityNameInput"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <Spinner
+        android:id="@+id/projectSpinner"
+        android:layout_width="139dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.882"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endTask" />
 
-    <Button
-        android:id="@+id/endActivity"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="32dp"
-        android:text="@string/stop_activity"
-        app:layout_constraintBaseline_toBaselineOf="@+id/myChronometer"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/activityNameInput"
-        android:layout_width="197dp"
-        android:layout_height="46dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="329dp"
+        android:layout_height="213dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="32dp"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskNameShow"
+        tools:context="com.github.studenttimetracker.MainActivity">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <Chronometer
+        android:id="@+id/myChronometer"
+        android:layout_width="245dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="12dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/activity_name_hint"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/startActivity"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toStartOf="@+id/endTask"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/endTask"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/stop_task"
+        app:layout_constraintBaseline_toBaselineOf="@+id/myChronometer"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <TextView
-        android:id="@+id/activityNameShow"
+        android:id="@+id/taskNameShow"
         android:layout_width="183dp"
         android:layout_height="21dp"
         android:layout_marginStart="32dp"
@@ -49,43 +63,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myChronometer" />
 
-    <Chronometer
-        android:id="@+id/myChronometer"
-        android:layout_width="245dp"
-        android:layout_height="47dp"
+    <EditText
+        android:id="@+id/taskNameInput"
+        android:layout_width="197dp"
+        android:layout_height="46dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="12dp"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toStartOf="@+id/endActivity"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/task_name_hint"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/startTask"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="0dp"
-        android:layout_height="207dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="48dp"
+    <Button
+        android:id="@+id/startTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityNameShow"
-        tools:context="com.github.studenttimetracker.MainActivity">
+        android:text="@string/start_task"
+        app:layout_constraintBaseline_toBaselineOf="@+id/taskNameInput"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <Spinner
-        android:id="@+id/activitySpinner"
-        android:layout_width="139dp"
-        android:layout_height="27dp"
-        android:layout_marginTop="4dp"
+    <Button
+        android:id="@+id/addProject"
+        android:layout_width="84dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/add_project"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.882"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endActivity" />
+        app:layout_constraintTop_toBottomOf="@+id/projectSpinner" />
+
+    <EditText
+        android:id="@+id/projectName"
+        android:layout_width="194dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="12dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/enter_project_hint"
+        app:layout_constraintBaseline_toBaselineOf="@+id/addProject"
+        app:layout_constraintEnd_toStartOf="@+id/addProject"
+        app:layout_constraintHorizontal_bias="0.842"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
