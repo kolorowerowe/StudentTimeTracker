@@ -23,4 +23,15 @@ public class Project {
 
     @DatabaseField(columnName = "icon")
     private String icon;
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", projectName='" + projectName + '\'' +
+                ", tasks number=" + ((tasks == null)?"null":tasks.size()) +
+                ", color='" + color + '\'' +
+                ", icon='" + icon + '\'' +
+                '}';
+    }
 }

@@ -12,6 +12,8 @@ import java.util.List;
 
 public class CalendarUtils {
 
+    public static final String timestampFormat = "dd/MM/yyyy HH:mm:ss";
+    public static final String hourFormat = "HH:mm:ss";
 
     public static List<StatisticsQueryObject> getStatisticsQueryList(StatisticsPeriodType unitType, LocalDate startDate, LocalDate endDate) {
 

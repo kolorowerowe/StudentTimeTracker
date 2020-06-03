@@ -19,13 +19,15 @@ import java.util.TimerTask;
 import static com.github.studenttimetracker.notifications.App.CHANNEL_ID;
 
 public class ChronometerService extends Service {
-    public static final String ELAPSED_TIME = "elapsed_time";
     public static final String ACTION_CHRONOMETER_BROADCAST = ChronometerService.class.getName() + "TimeBroadcast";
-    public static final String ACTIVITY_NAME = "activity_name";
+    public static final String TASK_NAME = "task_name";
+    public static final String PROJECT_NAME = "project_name";
+    public static final String ELAPSED_TIME = "elapsed_time";
     public static boolean active = false;
     Timer timer = new Timer();
     long startTime = 0;
-    String activityName;
+    String taskName;
+    String projectName;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -35,14 +37,14 @@ public class ChronometerService extends Service {
         timer.scheduleAtFixedRate( new sendBroadcastMessageClass(), 0, 1000);
 
         // Notification
-        activityName = intent.getStringExtra(ACTIVITY_NAME);
+        taskName = intent.getStringExtra(TASK_NAME);
+        projectName = intent.getStringExtra(PROJECT_NAME);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0,notificationIntent,0);
-
         Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
                 .setContentTitle("Student Time Tracker")
-                .setContentText(activityName)
+                .setContentText(taskName)
                 .setSmallIcon(R.drawable.ic_timer)
                 .setContentIntent(pendingIntent)
                 .build();
@@ -63,7 +65,8 @@ public class ChronometerService extends Service {
         // Sending Data back to Fragment
         Intent intent = new Intent(ACTION_CHRONOMETER_BROADCAST);
         intent.putExtra(ELAPSED_TIME, elapsedTime);
-        intent.putExtra(ACTIVITY_NAME,activityName);
+        intent.putExtra(TASK_NAME, taskName);
+        intent.putExtra(PROJECT_NAME, projectName);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
