@@ -30,8 +30,6 @@ import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DatabaseHelper databaseHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,17 +50,19 @@ public class MainActivity extends AppCompatActivity {
         leftNav.setNavigationItemSelectedListener(leftNavListener);
 
         // Filling database with data
-        try {
-            SQLiteDatabase database = new DatabaseHelper(this).getWritableDatabase();
-            InputStream inputStream = getResources().getAssets().open("databaseSetup.sql");
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            while (bufferedReader.ready()){
-                // In case of error: check if databaseSetup.sql contains no-SQL lines. Like empty lines, comments (yes even sql comments!)
-                database.execSQL(bufferedReader.readLine());
+        if(!this.getDatabasePath(DatabaseHelper.DATABASE_NAME).exists()) {
+            try {
+                SQLiteDatabase database = new DatabaseHelper(this).getWritableDatabase();
+                InputStream inputStream = getResources().getAssets().open("databaseSetup.sql");
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                while (bufferedReader.ready()) {
+                    // In case of error: check if databaseSetup.sql contains no-SQL lines. Like empty lines, comments (yes even sql comments!)
+                    database.execSQL(bufferedReader.readLine());
+                }
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
     }

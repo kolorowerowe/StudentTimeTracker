@@ -16,7 +16,7 @@ import java.sql.SQLException;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-    private static final String DATABASE_NAME = "timetracker.db";
+    public static final String DATABASE_NAME = "timetracker.db";
     private static final int DATABASE_VERSION = 3;
 
     private Dao<Project, Integer> projectDao;
@@ -29,7 +29,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
         try {
-
             // Create tables. This onCreate() method will be invoked only once of the application life time i.e. the first time when the application starts.
             TableUtils.createTable(connectionSource, Project.class);
             TableUtils.createTable(connectionSource, Task.class);
