@@ -41,7 +41,7 @@ public class TrackTimeFragment extends Fragment {
 
     private List<TimeEntry> timeEntryList = new ArrayList<>();
     private static String NULL_ACTIVITY = "---";
-    private List<String> spinnerArrayList = Arrays.asList(NULL_ACTIVITY,"Breakfast", "Studying", "Leisure", "Sport", "Gaming");
+    private List<String> spinnerArrayList = new ArrayList<>(Arrays.asList(NULL_ACTIVITY,"Breakfast", "Studying", "Leisure", "Sport", "Gaming"));
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,8 @@ public class TrackTimeFragment extends Fragment {
         final TextView taskNameShow = view.findViewById(R.id.taskNameShow);
         final Chronometer chronometer = view.findViewById(R.id.myChronometer);
         final Spinner spinner = view.findViewById(R.id.projectSpinner);
+        final Button addProjectButton = view.findViewById(R.id.addProject);
+        final TextView projectNameInput = view.findViewById(R.id.projectName);
 
         // BroadCast Receiver
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
@@ -89,6 +91,8 @@ public class TrackTimeFragment extends Fragment {
         spinner.setAdapter(arrayAdapter);
 
         // Setting up UI
+        addProjectButton.setVisibility(View.VISIBLE);
+        projectNameInput.setVisibility(View.VISIBLE);
         if(ChronometerService.active)
         {
             endButton.setVisibility(View.VISIBLE);
@@ -115,6 +119,8 @@ public class TrackTimeFragment extends Fragment {
             public void onClick(View v) {
 
                 String activityName = getActivityName(taskNameInput,spinner);
+                taskNameInput.setText("");
+                spinner.setSelection(0);
                 taskNameShow.setText(activityName);
 
                 Intent serviceIntent = new Intent(getActivity(),ChronometerService.class);
@@ -152,10 +158,25 @@ public class TrackTimeFragment extends Fragment {
 
             }
         });
+
+        addProjectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String projectName = projectNameInput.getText().toString();
+                projectNameInput.setText("");
+                spinnerArrayList.add(projectName);
+
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,spinnerArrayList);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(arrayAdapter);
+
+            }
+        });
         // End of onClicks()
 
         // Change Watchers
         startButton.setEnabled(false);
+        addProjectButton.setEnabled(false);
 
         taskNameInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -178,6 +199,25 @@ public class TrackTimeFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        projectNameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String textInput = projectNameInput.getText().toString().trim();
+
+                addProjectButton.setEnabled(!textInput.isEmpty());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
 
         return view;

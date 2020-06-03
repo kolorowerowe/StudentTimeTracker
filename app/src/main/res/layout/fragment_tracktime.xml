@@ -105,7 +105,7 @@
         android:layout_marginEnd="12dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/enter_project_hint"
+        android:hint="@string/enter_project_hint"
         app:layout_constraintBaseline_toBaselineOf="@+id/addProject"
         app:layout_constraintEnd_toStartOf="@+id/addProject"
         app:layout_constraintHorizontal_bias="0.842"
