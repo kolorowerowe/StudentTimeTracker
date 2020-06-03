@@ -28,7 +28,6 @@ import com.github.studenttimetracker.R;
 import com.github.studenttimetracker.database.Repository;
 import com.github.studenttimetracker.models.Project;
 import com.github.studenttimetracker.models.Task;
-import com.github.studenttimetracker.recycleView.TimeEntry;
 import com.github.studenttimetracker.recycleView.TimeEntryAdapter;
 import com.github.studenttimetracker.services.ChronometerService;
 import com.github.studenttimetracker.utils.CalendarUtils;
@@ -38,10 +37,10 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import static com.github.studenttimetracker.services.ChronometerService.PROJECT_NAME;
@@ -50,9 +49,10 @@ import static com.github.studenttimetracker.services.ChronometerService.TASK_NAM
 public class TrackTimeFragment extends Fragment {
 
     private Repository repository;
-    private List<TimeEntry> timeEntryList = new ArrayList<>();
+    private List<Task> timeEntryList = new ArrayList<>();
     private static String NULL_ACTIVITY = "Select a project";
     private List<String> spinnerArrayList = new ArrayList<>(Collections.singletonList(NULL_ACTIVITY));
+    private static long taskDuration = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,16 +78,18 @@ public class TrackTimeFragment extends Fragment {
         final TextView projectNameInput = view.findViewById(R.id.projectName);
 
         // BroadCast Receiver
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+        LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        long elapsedTime = intent.getLongExtra(ChronometerService.ELAPSED_TIME,0);
+                        taskDuration = intent.getLongExtra(ChronometerService.ELAPSED_TIME,0);
                         String activityName = intent.getStringExtra(TASK_NAME);
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(CalendarUtils.hourFormat);
                         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                        chronometer.setText(simpleDateFormat.format(elapsedTime));
+                        chronometer.setText(simpleDateFormat.format(taskDuration));
                         taskNameShow.setText(String.valueOf(activityName));
+                        spinner.setSelection(spinnerArrayList.indexOf(intent.getStringExtra(PROJECT_NAME)));
+                        endButton.setEnabled(true);
                     }
                 },new IntentFilter(ChronometerService.ACTION_CHRONOMETER_BROADCAST)
         );
@@ -105,7 +107,7 @@ public class TrackTimeFragment extends Fragment {
                 spinnerArrayList.add(project.getProjectName());
             }
         } catch (SQLException e) { e.printStackTrace();}
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,spinnerArrayList);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(requireContext(),android.R.layout.simple_spinner_item,spinnerArrayList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
 
@@ -149,7 +151,7 @@ public class TrackTimeFragment extends Fragment {
                 Intent serviceIntent = new Intent(getActivity(),ChronometerService.class);
                 serviceIntent.putExtra(TASK_NAME,taskName);
                 serviceIntent.putExtra(PROJECT_NAME,projectName);
-                getActivity().startService(serviceIntent);
+                requireActivity().startService(serviceIntent);
 
                 // set UI
                 endButton.setVisibility(View.VISIBLE);
@@ -166,8 +168,7 @@ public class TrackTimeFragment extends Fragment {
             public void onClick(View v) {
                 // Stop service
                 Intent serviceIntent = new Intent(getActivity(),ChronometerService.class);
-                long durationNumber = serviceIntent.getLongExtra(ChronometerService.ELAPSED_TIME,0);
-                getActivity().stopService(serviceIntent);
+                requireActivity().stopService(serviceIntent);
 
                 // Get variables
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -177,12 +178,6 @@ public class TrackTimeFragment extends Fragment {
                 String projectName = (String) spinner.getSelectedItem();
                 spinner.setSelection(0);
 
-                // Update local list
-                // TODO Wywal TimeEntry - dłuższe, bardziej skąplikowane
-                TimeEntry timeEntry = new TimeEntry(duration,taskName);
-                timeEntryList.add(timeEntry);
-                timeEntryAdapter.notifyDataSetChanged();
-
                 // Database Update
                 Task task = new Task();
                 task.setTaskName(taskName);
@@ -190,10 +185,14 @@ public class TrackTimeFragment extends Fragment {
                 project.setProjectName(projectName);
                 try {
                     task.setProject(repository.getOneMatchingProject(project));
-                    task.setTimeFrom(simpleDateFormat.format(timestamp.getTime() - durationNumber));
+                    task.setTimeFrom(simpleDateFormat.format(timestamp.getTime() - taskDuration));
                     task.setTimeTo(simpleDateFormat.format(timestamp));
                     repository.createOrUpdateTask(task);
                 } catch (SQLException | ParseException e) { e.printStackTrace();}
+
+                // Update local list
+                timeEntryList.add(task);
+                timeEntryAdapter.notifyDataSetChanged();
 
                 // set UI
                 taskNameInput.setVisibility(View.VISIBLE);
@@ -215,7 +214,7 @@ public class TrackTimeFragment extends Fragment {
 
                 // Update Local List
                 spinnerArrayList.add(projectName);
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,spinnerArrayList);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(requireContext(),android.R.layout.simple_spinner_item,spinnerArrayList);
                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(arrayAdapter);
 
@@ -232,6 +231,7 @@ public class TrackTimeFragment extends Fragment {
 
         // Change Watchers
         startButton.setEnabled(false);
+        endButton.setEnabled(false);
         addProjectButton.setEnabled(false);
 
         taskNameInput.addTextChangedListener(new TextWatcher() {
@@ -280,7 +280,7 @@ public class TrackTimeFragment extends Fragment {
     }
 
     // Init with data form DataBase
-    private List<TimeEntry> initTimeEntryRecycleView(){
+    private List<Task> initTimeEntryRecycleView(){
 
         List<Task> taskList = null;
         try {
@@ -290,10 +290,7 @@ public class TrackTimeFragment extends Fragment {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(CalendarUtils.hourFormat);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         assert taskList != null;
-        for (Task task: taskList)
-        {
-         timeEntryList.add(new TimeEntry(simpleDateFormat.format(task.getDuration()*1000),task.getTaskName()));
-        }
+        timeEntryList.addAll(taskList);
         return timeEntryList;
     }
 

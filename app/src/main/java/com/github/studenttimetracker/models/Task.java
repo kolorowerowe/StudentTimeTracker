@@ -1,5 +1,9 @@
 package com.github.studenttimetracker.models;
 
+import android.annotation.SuppressLint;
+
+import androidx.annotation.NonNull;
+
 import com.github.studenttimetracker.utils.CalendarUtils;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -38,10 +42,13 @@ public class Task {
         Date date1 = formatter.parse(this.timeFrom);
         Date date2 = formatter.parse(this.timeTo);
 
+        assert date2 != null;
+        assert date1 != null;
         long diff = date2.getTime() - date1.getTime();
         this.duration = (int) (diff / 1000);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Task{" +

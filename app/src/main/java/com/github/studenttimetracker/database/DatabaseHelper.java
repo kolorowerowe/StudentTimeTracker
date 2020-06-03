@@ -17,7 +17,7 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public static final String DATABASE_NAME = "timetracker.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     private Dao<Project, Integer> projectDao;
     private Dao<Task, Integer> taskDao;

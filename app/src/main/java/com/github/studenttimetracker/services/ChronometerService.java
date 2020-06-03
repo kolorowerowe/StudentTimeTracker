@@ -24,10 +24,10 @@ public class ChronometerService extends Service {
     public static final String PROJECT_NAME = "project_name";
     public static final String ELAPSED_TIME = "elapsed_time";
     public static boolean active = false;
-    Timer timer = new Timer();
-    long startTime = 0;
-    String taskName;
-    String projectName;
+    private Timer timer = new Timer();
+    private long startTime = 0;
+    private String taskName;
+    private String projectName;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
