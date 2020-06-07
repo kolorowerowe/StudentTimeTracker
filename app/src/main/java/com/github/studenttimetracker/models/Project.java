@@ -3,6 +3,7 @@ package com.github.studenttimetracker.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+
 import lombok.Data;
 
 @Data
@@ -22,4 +23,15 @@ public class Project {
 
     @DatabaseField(columnName = "icon")
     private String icon;
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", projectName='" + projectName + '\'' +
+                ", tasks number=" + ((tasks == null)?"null":tasks.size()) +
+                ", color='" + color + '\'' +
+                ", icon='" + icon + '\'' +
+                '}';
+    }
 }

@@ -36,8 +36,10 @@
     <string name="allow_notifications">Allow notifications</string>
 
     <!-- TrackTimeFragment    -->
-    <string name="start_activity">Start</string>
-    <string name="stop_activity">Stop</string>
-    <string name="activity_name_hint">Enter activity name</string>
+    <string name="start_task">Start</string>
+    <string name="stop_task">Stop</string>
+    <string name="task_name_hint">Enter task name</string>
+    <string name="add_project">Add Project</string>
+    <string name="enter_project_hint">Enter project</string>
 
 </resources>

@@ -40,6 +40,11 @@ public class Repository {
     public void DeleteProjectFromId(int id) throws SQLException {
         projectDao.deleteById(id);
     }
+    /* Marcin  */
+    public Project getOneMatchingProject(Project project) throws SQLException {
+        List<Project> l = projectDao.queryForMatching(project);
+        return l.get(0);
+    }
 
     /* Tasks */
     public List<Task> getTasksAll() throws SQLException {
