@@ -8,12 +8,13 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 public class Repository {
     private DatabaseHelper databaseHelper = null;
-    private Dao<Project, Integer> projectDao = null;
-    private Dao<Task, Integer> taskDao = null;
+    private Dao<Project, Integer> projectDao;
+    private Dao<Task, Integer> taskDao;
 
     public Repository(Context context) throws SQLException {
         getHelper(context);
@@ -29,7 +30,7 @@ public class Repository {
         projectDao.createOrUpdate(project);
     }
 
-    public Project getProjectFromId(int id) throws SQLException {
+    public Project getProjectById(int id) throws SQLException {
         return projectDao.queryForId(id);
     }
 
@@ -37,7 +38,7 @@ public class Repository {
         return projectDao.queryForEq(fieldName, value);
     }
 
-    public void DeleteProjectFromId(int id) throws SQLException {
+    public void DeleteProjectById(int id) throws SQLException {
         projectDao.deleteById(id);
     }
     /* Marcin  */
@@ -53,6 +54,11 @@ public class Repository {
 
     public void createOrUpdateTask(Task task) throws SQLException {
         taskDao.createOrUpdate(task);
+    }
+
+    public List<Task> getTasksInDateRange(String dateFrom, String dateTo) throws SQLException {
+        return taskDao.queryBuilder().where().between("time_to", dateFrom, dateTo).query();
+//        return taskDao.queryForAll();
     }
 
     public Task getTaskFromId(int id) throws SQLException {

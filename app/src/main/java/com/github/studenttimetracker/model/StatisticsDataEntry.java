@@ -11,17 +11,17 @@ import lombok.Data;
 @AllArgsConstructor
 public class StatisticsDataEntry implements Comparable<StatisticsDataEntry> {
     private String name;
-    private Integer hoursSpent;
+    private Integer seconds;
 
     public ValueDataEntry valueDataEntry() {
-        return new ValueDataEntry(this.name, hoursSpent);
+        return new ValueDataEntry(this.name, seconds);
     }
 
     @Override
     public int compareTo(StatisticsDataEntry dataEntry) {
-        if (hoursSpent > dataEntry.hoursSpent) {
+        if (seconds > dataEntry.seconds) {
             return -1;
-        } else if (hoursSpent < dataEntry.hoursSpent) {
+        } else if (seconds < dataEntry.seconds) {
             return 1;
         } else {
             return 0;

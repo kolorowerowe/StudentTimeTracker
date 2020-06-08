@@ -23,23 +23,30 @@ import com.anychart.charts.Pie;
 import com.github.studenttimetracker.R;
 import com.github.studenttimetracker.adapters.StatisticsCard;
 import com.github.studenttimetracker.adapters.StatisticsListAdapter;
+import com.github.studenttimetracker.database.Repository;
 import com.github.studenttimetracker.enums.StatisticsPeriodType;
 import com.github.studenttimetracker.model.StatisticsDataEntry;
 import com.github.studenttimetracker.model.StatisticsQueryObject;
+import com.github.studenttimetracker.models.Task;
 import com.github.studenttimetracker.utils.CalendarUtils;
-import com.github.studenttimetracker.utils.MockChartData;
+import com.github.studenttimetracker.utils.StatisticsMapper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 
 import org.joda.time.LocalDate;
 
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 public class StatisticsFragment extends Fragment {
 
+    private Repository repository;
     private StatisticsPeriodType unitType = StatisticsPeriodType.DAY;
     private Map<StatisticsPeriodType, Integer> currentIndexes = new EnumMap<>(StatisticsPeriodType.class);
 
@@ -51,7 +58,6 @@ public class StatisticsFragment extends Fragment {
     private List<StatisticsQueryObject> statisticsQueryObject;
 
     private Pie statisticsPieChart;
-    private MockChartData mockChartData;
     private ListView statisticsListView;
     private StatisticsListAdapter statisticsListAdapter;
     private NestedScrollView statisticsCardView;
@@ -65,7 +71,6 @@ public class StatisticsFragment extends Fragment {
         firstDate = LocalDate.now().minusMonths(5);
         statisticsQueryObject = CalendarUtils.getStatisticsQueryList(unitType, firstDate, LocalDate.now());
 
-        mockChartData = new MockChartData();
     }
 
     @Override
@@ -77,6 +82,12 @@ public class StatisticsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
+
+        try {
+            repository = new Repository(getContext());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         //     DAY | WEEK | MONTH | YEAR
         final TabLayout tabs = view.findViewById(R.id.statistics_period_tabs);
@@ -117,12 +128,22 @@ public class StatisticsFragment extends Fragment {
         textView.setText(statisticsQueryObject.get(currentIndexes.get(unitType)).getName());
         previousButton.setEnabled(statisticsQueryObject.get(currentIndexes.get(unitType)).isHasPrevious());
         nextButton.setEnabled(statisticsQueryObject.get(currentIndexes.get(unitType)).isHasNext());
-        refreshPieData();
+        try {
+            refreshPieData();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void refreshPieData() {
-        List<StatisticsDataEntry> statisticsDataEntries = mockChartData.getExampleData();
+    private void refreshPieData() throws SQLException {
 
+        DateFormat formatter = new SimpleDateFormat(CalendarUtils.timestampFormat);
+        String dateFrom = formatter.format(statisticsQueryObject.get(currentIndexes.get(unitType)).getDateFrom());
+        String dateTo = formatter.format(statisticsQueryObject.get(currentIndexes.get(unitType)).getDateTo());
+
+        List<Task> projectList = repository.getTasksInDateRange(dateFrom, dateTo);
+
+        List<StatisticsDataEntry> statisticsDataEntries = StatisticsMapper.getProjectsStatistics(projectList);
 
         List<DataEntry> dataEntries = new ArrayList<>();
         for (StatisticsDataEntry entry : statisticsDataEntries) {
@@ -132,7 +153,7 @@ public class StatisticsFragment extends Fragment {
 
         statisticsListAdapter.clear();
         for (int i = 0; i < statisticsDataEntries.size(); i++) {
-            statisticsListAdapter.add(new StatisticsCard(statisticsDataEntries.get(i).getName(), statisticsDataEntries.get(i).getHoursSpent() + "h "));
+            statisticsListAdapter.add(new StatisticsCard(statisticsDataEntries.get(i).getName(), CalendarUtils.formatSeconds(statisticsDataEntries.get(i).getSeconds())));
         }
 
     }
