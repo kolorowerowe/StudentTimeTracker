@@ -56,9 +56,12 @@ public class Repository {
         taskDao.createOrUpdate(task);
     }
 
+    public Task getEarliestTask() throws SQLException {
+        return taskDao.queryBuilder().orderBy("time_to", true).queryForFirst();
+    }
+
     public List<Task> getTasksInDateRange(String dateFrom, String dateTo) throws SQLException {
         return taskDao.queryBuilder().where().between("time_to", dateFrom, dateTo).query();
-//        return taskDao.queryForAll();
     }
 
     public Task getTaskFromId(int id) throws SQLException {

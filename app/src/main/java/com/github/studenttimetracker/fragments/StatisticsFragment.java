@@ -37,9 +37,9 @@ import org.joda.time.LocalDate;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +68,6 @@ public class StatisticsFragment extends Fragment {
         currentIndexes.put(StatisticsPeriodType.MONTH, 0);
         currentIndexes.put(StatisticsPeriodType.YEAR, 0);
 
-        firstDate = LocalDate.now().minusMonths(5);
-        statisticsQueryObject = CalendarUtils.getStatisticsQueryList(unitType, firstDate, LocalDate.now());
 
     }
 
@@ -88,6 +86,16 @@ public class StatisticsFragment extends Fragment {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        try {
+            DateFormat formatter = new SimpleDateFormat(CalendarUtils.timestampFormat);
+            Task firstTask = repository.getEarliestTask();
+            firstDate = LocalDate.fromDateFields(formatter.parse(firstTask.getTimeTo()));
+        } catch (SQLException | ParseException e) {
+            e.printStackTrace();
+            firstDate = LocalDate.now().minusMonths(6);
+        }
+        statisticsQueryObject = CalendarUtils.getStatisticsQueryList(unitType, firstDate, LocalDate.now());
 
         //     DAY | WEEK | MONTH | YEAR
         final TabLayout tabs = view.findViewById(R.id.statistics_period_tabs);
