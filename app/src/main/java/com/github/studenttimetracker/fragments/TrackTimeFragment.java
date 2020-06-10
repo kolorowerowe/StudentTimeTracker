@@ -1,5 +1,6 @@
 package com.github.studenttimetracker.fragments;
 
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,9 +43,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.TimeZone;
 
+import static com.github.studenttimetracker.notifications.NotificationChannels.POMODORO_CHANNEL_ID;
 import static com.github.studenttimetracker.services.ChronometerService.PROJECT_NAME;
 import static com.github.studenttimetracker.services.ChronometerService.TASK_NAME;
 
@@ -76,6 +79,8 @@ public class TrackTimeFragment extends Fragment {
         final Spinner spinner = view.findViewById(R.id.projectSpinner);
         final Button addProjectButton = view.findViewById(R.id.addProject);
         final TextView projectNameInput = view.findViewById(R.id.projectName);
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireContext());
+
 
         // BroadCast Receiver
         LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(
@@ -83,6 +88,15 @@ public class TrackTimeFragment extends Fragment {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         taskDuration = intent.getLongExtra(ChronometerService.ELAPSED_TIME,0);
+                        // 25min = 25*60s*1000ms +- 100ms
+                        if(1_499_900<taskDuration && taskDuration<1_500_100){
+                            Notification notification = new NotificationCompat.Builder(context,POMODORO_CHANNEL_ID)
+                                    .setContentTitle("Pomodoro Break")
+                                    .setContentText("You've been working for 25min!")
+                                    .setSmallIcon(R.drawable.ic_timer)
+                                    .build();
+                            notificationManager.notify(2,notification);
+                        }
                         String activityName = intent.getStringExtra(TASK_NAME);
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(CalendarUtils.hourFormat);
                         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
