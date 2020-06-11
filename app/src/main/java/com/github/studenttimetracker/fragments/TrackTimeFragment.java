@@ -24,14 +24,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.studenttimetracker.R;
 import com.github.studenttimetracker.database.Repository;
 import com.github.studenttimetracker.models.Project;
 import com.github.studenttimetracker.models.Task;
-import com.github.studenttimetracker.recycleView.TimeEntryAdapter;
 import com.github.studenttimetracker.services.ChronometerService;
 import com.github.studenttimetracker.utils.CalendarUtils;
 
@@ -52,7 +49,6 @@ import static com.github.studenttimetracker.services.ChronometerService.TASK_NAM
 public class TrackTimeFragment extends Fragment {
 
     private Repository repository;
-    private List<Task> timeEntryList = new ArrayList<>();
     private static String NULL_ACTIVITY = "Select a project";
     private List<String> spinnerArrayList = new ArrayList<>(Collections.singletonList(NULL_ACTIVITY));
     private static long taskDuration = 0;
@@ -81,7 +77,6 @@ public class TrackTimeFragment extends Fragment {
         final TextView projectNameInput = view.findViewById(R.id.projectName);
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireContext());
 
-
         // BroadCast Receiver
         LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(
                 new BroadcastReceiver() {
@@ -107,13 +102,6 @@ public class TrackTimeFragment extends Fragment {
                     }
                 },new IntentFilter(ChronometerService.ACTION_CHRONOMETER_BROADCAST)
         );
-
-        // Setting the timeEntryRecycleView
-        final RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        final TimeEntryAdapter timeEntryAdapter = new TimeEntryAdapter(initTimeEntryRecycleView());
-        recyclerView.setAdapter(timeEntryAdapter);
 
         // Spinner Items
         try {
@@ -204,10 +192,6 @@ public class TrackTimeFragment extends Fragment {
                     repository.createOrUpdateTask(task);
                 } catch (SQLException | ParseException e) { e.printStackTrace();}
 
-                // Update local list
-                timeEntryList.add(task);
-                timeEntryAdapter.notifyDataSetChanged();
-
                 // set UI
                 taskNameInput.setVisibility(View.VISIBLE);
                 startButton.setVisibility(View.VISIBLE);
@@ -291,21 +275,6 @@ public class TrackTimeFragment extends Fragment {
         });
 
         return view;
-    }
-
-    // Init with data form DataBase
-    private List<Task> initTimeEntryRecycleView(){
-
-        List<Task> taskList = null;
-        try {
-            taskList = repository.getTasksAll();
-        } catch (SQLException e) { e.printStackTrace();}
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(CalendarUtils.hourFormat);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        assert taskList != null;
-        timeEntryList.addAll(taskList);
-        return timeEntryList;
     }
 
     private void handleInputSpinnerChange(TextView taskNameInput, Spinner spinner, Button startButton){

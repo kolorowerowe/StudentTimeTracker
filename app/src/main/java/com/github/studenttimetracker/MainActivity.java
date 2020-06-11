@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // Default fragment
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new TimelineFragment()).commit();
+
     }
 
     private NavigationView.OnNavigationItemSelectedListener leftNavListener =
@@ -102,9 +105,6 @@ public class MainActivity extends AppCompatActivity {
                     Fragment selectedFragment;
 
                     switch (item.getItemId()) {
-                        case R.id.nav_timeline:
-                            selectedFragment = new TimelineFragment();
-                            break;
                         case R.id.nav_trackTime:
                             selectedFragment = new TrackTimeFragment();
                             break;
