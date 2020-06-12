@@ -16,7 +16,7 @@ import com.github.studenttimetracker.R;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.github.studenttimetracker.notifications.App.CHANNEL_ID;
+import static com.github.studenttimetracker.notifications.NotificationChannels.SERVICE_CHANNEL_ID;
 
 public class ChronometerService extends Service {
     public static final String ACTION_CHRONOMETER_BROADCAST = ChronometerService.class.getName() + "TimeBroadcast";
@@ -42,10 +42,10 @@ public class ChronometerService extends Service {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0,notificationIntent,0);
-        Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
+        Notification notification = new NotificationCompat.Builder(this,SERVICE_CHANNEL_ID)
                 .setContentTitle("Student Time Tracker")
                 .setContentText(taskName)
-                .setSmallIcon(R.drawable.ic_timer)
+                .setSmallIcon(R.drawable.ic_arrow_forward_ios)
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(1,notification);

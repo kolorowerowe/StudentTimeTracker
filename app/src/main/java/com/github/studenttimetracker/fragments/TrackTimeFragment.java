@@ -1,5 +1,6 @@
 package com.github.studenttimetracker.fragments;
 
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,16 +20,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.studenttimetracker.R;
 import com.github.studenttimetracker.database.Repository;
 import com.github.studenttimetracker.models.Project;
 import com.github.studenttimetracker.models.Task;
-import com.github.studenttimetracker.recycleView.TimeEntryAdapter;
 import com.github.studenttimetracker.services.ChronometerService;
 import com.github.studenttimetracker.utils.CalendarUtils;
 
@@ -40,16 +40,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.TimeZone;
 
+import static com.github.studenttimetracker.notifications.NotificationChannels.POMODORO_CHANNEL_ID;
 import static com.github.studenttimetracker.services.ChronometerService.PROJECT_NAME;
 import static com.github.studenttimetracker.services.ChronometerService.TASK_NAME;
 
 public class TrackTimeFragment extends Fragment {
 
     private Repository repository;
-    private List<Task> timeEntryList = new ArrayList<>();
     private static String NULL_ACTIVITY = "Select a project";
     private List<String> spinnerArrayList = new ArrayList<>(Collections.singletonList(NULL_ACTIVITY));
     private static long taskDuration = 0;
@@ -76,6 +75,7 @@ public class TrackTimeFragment extends Fragment {
         final Spinner spinner = view.findViewById(R.id.projectSpinner);
         final Button addProjectButton = view.findViewById(R.id.addProject);
         final TextView projectNameInput = view.findViewById(R.id.projectName);
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireContext());
 
         // BroadCast Receiver
         LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(
@@ -83,6 +83,15 @@ public class TrackTimeFragment extends Fragment {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         taskDuration = intent.getLongExtra(ChronometerService.ELAPSED_TIME,0);
+                        // 25min = 25*60s*1000ms +- 100ms
+                        if(1_499_900<taskDuration && taskDuration<1_500_100){
+                            Notification notification = new NotificationCompat.Builder(context,POMODORO_CHANNEL_ID)
+                                    .setContentTitle("Pomodoro Break")
+                                    .setContentText("You've been working for 25min!")
+                                    .setSmallIcon(R.drawable.ic_timer)
+                                    .build();
+                            notificationManager.notify(2,notification);
+                        }
                         String activityName = intent.getStringExtra(TASK_NAME);
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(CalendarUtils.hourFormat);
                         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -93,13 +102,6 @@ public class TrackTimeFragment extends Fragment {
                     }
                 },new IntentFilter(ChronometerService.ACTION_CHRONOMETER_BROADCAST)
         );
-
-        // Setting the timeEntryRecycleView
-        final RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        final TimeEntryAdapter timeEntryAdapter = new TimeEntryAdapter(initTimeEntryRecycleView());
-        recyclerView.setAdapter(timeEntryAdapter);
 
         // Spinner Items
         try {
@@ -190,10 +192,6 @@ public class TrackTimeFragment extends Fragment {
                     repository.createOrUpdateTask(task);
                 } catch (SQLException | ParseException e) { e.printStackTrace();}
 
-                // Update local list
-                timeEntryList.add(task);
-                timeEntryAdapter.notifyDataSetChanged();
-
                 // set UI
                 taskNameInput.setVisibility(View.VISIBLE);
                 startButton.setVisibility(View.VISIBLE);
@@ -277,21 +275,6 @@ public class TrackTimeFragment extends Fragment {
         });
 
         return view;
-    }
-
-    // Init with data form DataBase
-    private List<Task> initTimeEntryRecycleView(){
-
-        List<Task> taskList = null;
-        try {
-            taskList = repository.getTasksAll();
-        } catch (SQLException e) { e.printStackTrace();}
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(CalendarUtils.hourFormat);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        assert taskList != null;
-        timeEntryList.addAll(taskList);
-        return timeEntryList;
     }
 
     private void handleInputSpinnerChange(TextView taskNameInput, Spinner spinner, Button startButton){
