@@ -1,10 +1,13 @@
 package com.github.studenttimetracker;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -30,27 +33,40 @@ import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences;
+    NavigationView leftNav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        // top toolbar
         Toolbar toolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        //left nav
+        leftNav = findViewById(R.id.left_navigation);
+        leftNav.setNavigationItemSelectedListener(leftNavListener);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+                sharedPreferences = getSharedPreferences(SettingsActivity.MY_PREFERENCES, Context.MODE_PRIVATE);
+                TextView username = leftNav.getHeaderView(0).findViewById(R.id.nav_header_name);
+                username.setText(sharedPreferences.getString(SettingsActivity.YOUR_NAME_KEY, "Hi!"));
+            }
+        };
         drawer.addDrawerListener(toggle);
 
+        // bottom nav
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(bottomNavListener);
 
-        NavigationView leftNav = findViewById(R.id.left_navigation);
-        leftNav.setNavigationItemSelectedListener(leftNavListener);
-
         // Filling database with data
-        if(!this.getDatabasePath(DatabaseHelper.DATABASE_NAME).exists()) {
+        if (!this.getDatabasePath(DatabaseHelper.DATABASE_NAME).exists()) {
             try {
                 SQLiteDatabase database = new DatabaseHelper(this).getWritableDatabase();
                 InputStream inputStream = getResources().getAssets().open("databaseSetup.sql");

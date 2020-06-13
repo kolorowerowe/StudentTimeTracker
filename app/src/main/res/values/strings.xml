@@ -19,21 +19,15 @@
     <string name="statistics_tab_month">Month</string>
     <string name="statistics_tab_year">Year</string>
 
-
-
+     <!-- Flags for drawer -->
     <string name="navigation_drawer_open">OPEN</string>
     <string name="navigation_drawer_close">CLOSE</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="profile_header">Profile</string>
-    <string name="notifications_header">Notifications</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your name</string>
-
-    <!-- Sync Preferences -->
-    <string name="allow_notifications">Allow notifications</string>
+    <string name="settings_username">Your name</string>
+    <string name="settings_allow_notifications">Allow notifications</string>
+    <string name="settings_saved_message">Settings have been successfully saved</string>
 
     <!-- TrackTimeFragment    -->
     <string name="start_task">Start</string>
