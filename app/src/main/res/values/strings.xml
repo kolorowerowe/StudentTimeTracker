@@ -42,4 +42,17 @@
     <string name="add_project">Add Project</string>
     <string name="enter_project_hint">Enter project</string>
 
+    <!-- Info Activity -->
+    <string name="project_name">Student Time Tracker</string>
+    <string name="description">Opis</string>
+    <string name="description_value">Aplikacja służy do mierzenia czasu pracy nad róznymi projektami. Ty sam możesz nadać nazwę projektów. Możesz skorzystać z naszych propozycji np. "Projekt z Androida", "Czytanie książek" czy "Jazda na rowerze". Dla każdego projektu możesz oddzielnie mierzyc czas po przez taski. Skorzystaj z rozbudowanego podsumowania, możesz swoje aktywności sprawdzać w rozliczeniach dziennych, tygodniowych, miesięcznych czy nawet rocznych. Nasz wykres kołowy pomoże utrzymywać czasową aktywność w Twoich projektach na wysokim poziomie.</string>
+    <string name="instruction">Instrukcja</string>
+    <string name="instruction_value">Aby zacząć mierzyć czas dodaj swój pierwszy projekt i w ramach projektu dodaj pierwsze zadanie do którego będziesz mierzył czas. Jest to intuicyjnie proste. Do dzieła!</string>
+    <string name="about">O nas</string>
+    <string name="about_value">Aplikacja została wykonana jako projekt zaliczeniowy z przedmiotu "Wprowadzenie do technologi mobilnych". Autorem jest wysoko wyspecjalizowany zespół studentów informatyk w skład którego wchodzą:</string>
+    <string name="author_1">Szymon Borowy</string>
+    <string name="author_2">Dominik Kołodziej</string>
+    <string name="author_3">Marcin Kozak</string>
+    <string name="footer">Dziękujemy za pobranie naszej aplikacji!</string>
+
 </resources>
