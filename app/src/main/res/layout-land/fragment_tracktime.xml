@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Chronometer
+        android:id="@+id/myChronometer"
+        android:layout_width="387dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        android:gravity="center"
+        android:textSize="50sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/startTask"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="84dp"
+        android:text="@string/start_task"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/endTask" />
+
+    <Spinner
+        android:id="@+id/projectSpinner"
+        android:layout_width="252dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintStart_toEndOf="@+id/taskNameInput"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/taskNameShow"
+        android:layout_width="178dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/roboto_medium"
+        android:gravity="center"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myChronometer" />
+
+    <EditText
+        android:id="@+id/taskNameInput"
+        android:layout_width="257dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/task_name_hint"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/endTask"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="60dp"
+        android:text="@string/stop_task"
+        app:layout_constraintBaseline_toBaselineOf="@+id/myChronometer"
+        app:layout_constraintStart_toEndOf="@+id/myChronometer" />
+
+    <Button
+        android:id="@+id/addProject"
+        android:layout_width="84dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="132dp"
+        android:text="@string/add_project"
+        app:layout_constraintBaseline_toBaselineOf="@+id/projectName"
+        app:layout_constraintStart_toEndOf="@+id/projectName" />
+
+    <EditText
+        android:id="@+id/projectName"
+        android:layout_width="194dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="112dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/enter_project_hint"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskNameShow" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
