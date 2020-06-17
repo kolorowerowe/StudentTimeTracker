@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Default fragment
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new TimelineFragment()).commit();
+        if(savedInstanceState == null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new TimelineFragment()).commit();
 
     }
 
