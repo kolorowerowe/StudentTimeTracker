@@ -48,8 +48,8 @@ public class Repository {
     }
 
     /* Tasks */
-    public List<Task> getTasksAll() throws SQLException {
-        return taskDao.queryForAll();
+    public List<Task> getTasksAllOrdered() throws SQLException {
+        return taskDao.queryBuilder().orderBy("time_from",false).query();
     }
 
     public void createOrUpdateTask(Task task) throws SQLException {
