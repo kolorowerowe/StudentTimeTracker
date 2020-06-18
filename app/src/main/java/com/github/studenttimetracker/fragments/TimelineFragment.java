@@ -77,7 +77,7 @@ public class TimelineFragment extends Fragment {
 
         List<Task> taskList = null;
         try {
-            taskList = repository.getTasksAll();
+            taskList = repository.getTasksAllOrdered();
         } catch (SQLException e) { e.printStackTrace();}
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(CalendarUtils.hourFormat);

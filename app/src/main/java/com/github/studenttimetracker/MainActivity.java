@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import com.github.studenttimetracker.activities.InfoActivity;
 import com.github.studenttimetracker.activities.SettingsActivity;
 import com.github.studenttimetracker.database.DatabaseHelper;
-import com.github.studenttimetracker.fragments.ProfileFragment;
 import com.github.studenttimetracker.fragments.StatisticsFragment;
 import com.github.studenttimetracker.fragments.TimelineFragment;
 import com.github.studenttimetracker.fragments.TrackTimeFragment;
@@ -128,15 +127,11 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.nav_statistics:
                             selectedFragment = new StatisticsFragment();
                             break;
-                        case R.id.nav_profile:
-                            selectedFragment = new ProfileFragment();
-                            break;
                         default:
                             selectedFragment = new TimelineFragment();
                             break;
                     }
                     loadFragment(selectedFragment);
-
 
                     return true;
                 }
