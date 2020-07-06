@@ -11,7 +11,7 @@ The app lets You track time and displays it in neat pie-chart form. Tasks (singl
 - uses Android services
 - is broadcast sender & receiver
 - push notifications
-- connection to external API ([Quotes API](https://quotes.rest/)) with [Volley](https://quotes.rest/)
+- connection to external API ([Quotes API](https://quotes.rest/)) with [Volley](https://developer.android.com/training/volley)
 - [Materials.io](https://material.io/develop/android/docs/getting-started/)
 - [AnyChart](https://www.anychart.com/)
 
@@ -19,10 +19,7 @@ The app lets You track time and displays it in neat pie-chart form. Tasks (singl
 Documentation-like tutorial "How to build Student Time Tracker" is available [here (in Polish)](https://drive.google.com/file/d/15vBYyHs_pDBAkWYeqgXsIO2HjUw4YRTL/view?usp=sharing)
 
 ## GUI
-![](https://github.com/kolorowerowe/StudentTimeTracker/tree/master/READMEImages/1.png)
-![](https://github.com/kolorowerowe/StudentTimeTracker/tree/master/READMEImages/2.png)
-![](https://github.com/kolorowerowe/StudentTimeTracker/tree/master/READMEImages/3.png)
-![](https://github.com/kolorowerowe/StudentTimeTracker/tree/master/READMEImages/4.png)
-![](https://github.com/kolorowerowe/StudentTimeTracker/tree/master/READMEImages/5.png)
-![](https://github.com/kolorowerowe/StudentTimeTracker/tree/master/READMEImages/6.png)
-![](https://github.com/kolorowerowe/StudentTimeTracker/tree/master/READMEImages/7.png)
+|<img src="https://github.com/kolorowerowe/StudentTimeTracker/blob/master/READMEImages/1.png" width="250">|<img src="https://github.com/kolorowerowe/StudentTimeTracker/blob/master/READMEImages/2.png" width="250">|<img src="https://github.com/kolorowerowe/StudentTimeTracker/blob/master/READMEImages/3.png" width="250">|
+|---|---|---|
+<img src="https://github.com/kolorowerowe/StudentTimeTracker/blob/master/READMEImages/4.png" width="250">|<img src="https://github.com/kolorowerowe/StudentTimeTracker/blob/master/READMEImages/5.png" width="250">|<img src="https://github.com/kolorowerowe/StudentTimeTracker/blob/master/READMEImages/6.png" width="250">|
+|<img src="https://github.com/kolorowerowe/StudentTimeTracker/blob/master/READMEImages/7.png" width="250">|||
