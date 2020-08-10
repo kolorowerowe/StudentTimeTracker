@@ -1,5 +1,5 @@
 # Student Time Tracker
-Student Time Tracker is an aplication made as a final project for the Introduction to Mobile Technologies classes on AGH-University of Science and Technology.
+Student Time Tracker is an application made as a final project for the Introduction to Mobile Technologies classes on AGH-University of Science and Technology.
 
 ## App description
 The app lets You track time and displays it in neat pie-chart form. Tasks (single time entries) can be grouped into projects. The app runs in the background and every 25 minutes it lets You know that it is a good time for a Pomodoro Break.
